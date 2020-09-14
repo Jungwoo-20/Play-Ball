@@ -1,0 +1,41 @@
+    {%extends "base_head.html"%}
+    {% load static %}
+
+    {%block body%}
+        <div class="container">
+
+            {%include "base_navbar.html"%}
+
+            <div class="body_main" role="main" style="height:200px;">
+
+                <form action="/board_insert" id="frmQuestion" style="height: 100%;">
+
+                    <textarea class ="question" name="question" style="" placeholder="특정날짜와 특정팀 기입시 더 좋은 결과를 볼 수 있습니다.&#13;&#10; ex) 2020년 두산 베어스 감독은 누구인가요?"></textarea>
+                    <div class="information">
+                        <input type="text" placeholder="작성자" name="writer" style="height: 18.4px;">
+                        <input type="password" placeholder="비밀번호" name="password" style="height: 18.4px;">
+                        <input type="button"  value="등록" onclick="showConfirm();">
+                        <input type="button"  value="취소" onclick="location.href='/index'">
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                var frm = document.getElementById('frmQuestion')
+                 function showConfirm() {
+                 if( frm.writer.value=="" || frm.question.value=="" || frm.password.value==""){
+                    alert("빈칸을 채워 주세요")
+                    }else{
+                        if (confirm("질문 등록 후 수정은 불가능 합니다.")){
+                            frm.submit();
+                        }
+                    }
+                }
+            </script>
+        </div>
+    </body>
+
+    {%endblock%}
+
+    </html>
+

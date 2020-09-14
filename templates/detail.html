@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+ <html lang="ko" dir="ltr" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+         {% load static %}
+        <link href="{% static 'css/detail.css' %}" rel="stylesheet">
+        <title>PLAY-BALL</title>
+
+    </head>
+    <body>
+        <div class="container">
+
+            <nav class="gnb" id="gnb">
+                <ul>
+                    <li class="go_write"><a href='/board_write'>작성하기</a></li>
+                    {% if request.session.user == "admin"%}
+                    <li class="go_answers"><a href='reinforce_view'>강화하기</a></li>
+                    <li class="go_answers"><a href="/log_out">로그아웃</a></li>
+                    {% else%}
+                    <li class="log_in"><a href="#acField" onclick="openField()">로그인</a><form id="log_in_widget" action="/log_in" method="post">
+                        <fieldset id="acField">
+                            <h2 style="color:#4a4a4a">로그인</h2>
+                            <div class="idpw">
+                                {%csrf_token%}
+                                <label for="user_id">아이디</label>	<input name="user_id" id="user_id" type="text" required="">
+                                <label for="user_pw">비밀번호</label><input name="user_pw" id="user_pw" type="password" required="">
+                            </div>
+                           <input type="submit" value="로그인">
+                        <button type="button" class="close" onClick="closeField()">×</button></fieldset>
+                    </form></li>
+                    {% endif %}
+                    <strong>{{ request.session.user }}</strong>
+                    <script>
+                        function openField() {
+                        document.getElementById("acField").style.display = "block";
+                      }
+                      function closeField() {
+                        document.getElementById("acField").style.display = "none";
+                      }
+                    </script>
+                </ul>
+            </nav>
+            <header class="header">
+                <h1><a href="/"><img src="/static/img/baseball-player.png" style="height: 90px;">PLAY-BALL</a></h1>
+            </header>
+
+            <div class="body_main" role="main">
+                <div class="qna_part">
+
+                    <div class="question_part" >
+                        {% for i in rsDetail %}
+                        <table>
+                            <form action="/delete" id="frmQuestion">
+                            <tr style="font-size:18px">
+                                <td colspan="2">{{i.question}}</td>
+                            </tr>
+                            <tr height="20%">
+                                <td width="20%">{{i.writer}}</td><td>{{i.date}}</td>
+                            </tr>
+                                <input type="text" id="password" value="{{i.pw}}" style="display:none">
+                                <input type="text" name="no" value="{{i.no}}" style="display:none">
+                                </form>
+                        </table>
+                        {% endfor %}
+                        <div class="delete_btn"><input type="button" value="삭제" onclick="showPW();"></div>
+                    </div>
+
+                    <div class="line" style="border-bottom:1px solid #aaa"></div>
+
+                    <div class="answer_part" >
+
+                        {% if not rsAnswers %}
+                        <form class="answer" >
+                            <div class="img"><img src="/static/img/baseball-player.png" style="height: 65px;"></div>
+                            <div class="answer_box">
+                                <table width="100%" >
+                                    <tr style="font-size:16px; color:#4a4a4a">
+                                        <td height="65px" align="center">답변 대기 중입니다</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="clear:both;"></div>
+                    </form>
+                         {% endif %}
+
+                        {% for i in rsAnswers %}
+
+                        <form class="answer" action="/rating_insert" id="frmAnswer" >
+                            <input type="text" name="board_no" value="{{i.board_no}}" style="display:none">
+                            <input type="text" name="answer_no" value="{{i.answer_no}}" style="display:none">
+                            <div class="img"><img src="/static/img/baseball-player.png" style="height: 65px;"></div>
+                            <div class="answer_box">
+                                <table width="100%">
+                                    <tr style="font-size:18px; color:#4a4a4a; font-weight: bold;">
+                                        <td colspan="2" style="padding-left:10px;">{{i.answer}}</td>
+                                    </tr>
+                                    <tr style="font-size:13px; height=20%;" >
+                                        <td colspan="2" style="padding-left:10px;"><a href={{i.article_url}} target="_blank" style="color:#4a4a4a">{{i.article_title}}</a></td>
+                                    </tr>
+                                    <tr height="20%">
+                                        <td></td>
+                                        <td>
+                                            <div class="rating_part" style="float:right; color:#4a4a4a;">
+                                                <button class="rating" name="rating" value=good onclick="javascript:document.getElementById('frmAnswer').submit()"><img src="/static/img/like.png" style="height: 22px;">{{i.good}}</button>
+                                                <button class="rating" name="rating" value=bad onclick="javascript:document.getElementById('frmAnswer').submit()"><img src="/static/img/dislike.png" name="rating" style="height: 22px;" >{{i.bad}}</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </form>
+
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <div class="buttons">
+                         <input type="button"  value="취소" onclick="location.href='/index'">
+                </div>
+            </div>
+            <script>
+
+                function showPW(){
+                    var pw=prompt("작성 시 비밀번호 입력")
+                    if(pw==document.getElementById("password").value){
+                        document.getElementById('frmQuestion').submit()
+                    }
+                }
+            </script>
+        </div>
+
+    </body>
+    </html>
+
+<!--<!DOCTYPE html>
+    <html lang="ko" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        {% load static %}
+         <link href="{% static 'css/detail.css' %}" rel="stylesheet">
+        <title>PLAY-BALL</title>
+    </head>
+    <body>
+        <div class="header" role="banner">
+            <div class="header-center">
+                    <div class="name"><a href="/"><h1 style="color:rgb(51, 51, 51);">PLAY-BALL</h1></a></div>
+            </div>
+
+        </div>
+
+        <div class="container" role="main">
+
+            <div class="question_part" >
+                {% for i in rsDetail %}
+                <table>
+                    <tr height="30%">
+                        <td align="center" width="10%">작성자</td>
+                        <td width="30%">{{i.writer}}</td>
+                    </tr>
+                    <tr>
+                        <td align="center">질문</td>
+                        <td width="90%">{{i.question}}</td>
+                    </tr>
+                </table>
+                {% endfor %}
+            </div>
+
+            {% if rsAnswers %}
+
+            <div class="answer_part" >
+
+                {% for i in rsAnswers %}
+                <form action="/rating_insert" id="frmAnswer" style="margin-top:40px">
+                    <input type="text" name="board_no" value="{{i.board_no}}" style="display:none">
+                    <input type="text" name="answer_no" value="{{i.answer_no}}" style="display:none">
+                  <table>
+
+                        <tr height="25px">
+                            <td align="center" width="10%">답변</td>
+                            <td width="90%">{{i.answer}}</td>
+                        </tr >
+                        <tr  height="40px">
+                            <td align="center">참고 기사</td>
+                            <td><div class="article_part"><a href={{i.article_url}} target="_blank">{{i.article_title}}</a></div></td>
+                        </tr>
+                  </table>
+                       <div class="rating_part" style="float:right">
+                           <button value=good name="rating" onclick="javascript:document.getElementById('frmAnswer').submit()">만족 : {{i.good}}</button>
+                           <button value=bad name="rating" onclick="javascript:document.getElementById('frmAnswer').submit()">불만족 : {{i.bad}}</button>
+                       </div>
+
+
+                </form>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="buttons">
+                 <input type="button"  value="취소" onclick="location.href='/'">
+            </div>
+        </div>
+
+    </body>
+    </html>
+-->

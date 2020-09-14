@@ -1,0 +1,289 @@
+ body{
+             background-color: #d7e8ff29;
+        }
+
+.container{
+    width: 960px;
+    margin: 0 auto;
+    padding-top:0;
+}
+
+.gnb{
+    position: relative;
+    font-size: 13px;
+    height: 31px;
+    margin-bottom: 30px;
+    background-color: rgb(77,153,244,0.7);
+    border: 1px solid rgb(77,153,244,0.7);
+}
+.gnb>ul{
+    position: absolute;
+    top: 32px;
+    left: -1px;
+    right: -1px;
+    height: 0;
+    margin:0;
+    padding: 0;
+    list-style: none;
+}
+
+.gnb>ul>li {
+    position: relative;
+    top: -32px;
+    float: left;
+    margin: 0 -1px -8px 0;
+}
+
+.gnb>ul>li>a {
+    display: block;
+    border-left: 1px solid rgb(77,153,244,0.7);
+    border-right: 1px solid rgb(77,153,244,0.7);
+    line-height: 32px;
+    padding: 0 20px;
+    color :#4a4a4a;
+    font-size: 13px;
+    font-weight: bold;
+    position: relative;
+    
+}
+
+.gnb a:hover {
+    color: #f1f1f1;
+  }
+
+
+.log_in>form>fieldset {
+    position: absolute;
+    z-index: 2;
+    width: 229px;
+    top: 30px;
+    display: none;
+    border: 0;
+    background: #fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 3px;
+    margin: 0;
+    padding: 20px 16px 18px 16px;
+    box-shadow: 0 1px 0 #aaa;
+}
+.log_in label {
+    display: block;
+    margin: 0 0 5px 0;
+    color: #666;
+    font-size: 12px;
+}
+
+.log_in input[type="text"], .log_in input[type="password"] {
+    height: 21px;
+    line-height: 21px;
+    padding: 0 4px;
+    margin: 0 0 10px 0;
+    width: 219px;
+    background: #f6f6f6;
+    border: 1px solid #d6d6d6;
+    border-top: 2px solid #bfbebe;
+    border-bottom: 0;
+    box-shadow: 0 1px 0 #eae9e9 inset;
+}
+
+.log_in input[type="submit"] {
+    background: rgb(77,153,244,0.4);
+    border: 1px solid rgb(77,153,244,0.5);
+    color: #4a4a4a;
+    font-size:13px;
+    font-weight: bold;
+    line-height: 27px;
+    padding: 0 20px;
+    margin: 0;
+    vertical-align: top;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 1px 0 #aaa inset;
+}
+
+.log_in .close {
+    background: none;
+    border: 0;
+    color: rgb(77,153,244,0.4);
+    font-size: 22px;
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    font-weight: normal;
+}
+
+a{
+    text-decoration:none;
+}
+
+h1>a{
+    color:rgb(77, 153, 244);
+}
+
+h1{
+    margin: auto;
+    margin-right: 390px;
+    width: fit-content;
+}
+
+.header{
+    position: relative;
+    margin: 0 0 30px 0;
+}
+
+.header>.side{
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    display: flex;
+}
+
+.header>.search{
+    display: inline-block;
+    margin:0;
+}
+
+.header .search>input {
+    font-size: 12px;
+    vertical-align: top;   
+}
+
+.header .search>input[type="text"] {
+    border: 1px solid #dedede;
+    height: 21px;
+    line-height: 21px;
+    padding: 0 4px;
+    margin: 0 -6px 0 0;
+    width: 126px;
+}
+
+/*------------header 끝--------------------------*/
+
+.body_main{
+    position: relative;
+}
+
+.content{
+    padding: 0 0 40px 0;
+}
+
+.content>:first-child{
+    margin-top: 0;
+}
+
+.board{
+    font-size: 12px; 
+}
+
+.board_list>table{
+    border: 0;
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+    color: #4a4a4a;
+    font-size: 13px;
+}
+
+.list_footer {
+    position: relative;
+    margin: 15px 0;
+    zoom: 1;
+}
+
+.list_footer .btnArea {
+    float: right;
+    margin: 0;
+}
+
+.btnArea {
+    clear: both;
+    margin: 10px 0;
+    padding: 0;
+    text-align: right;
+    zoom: 1;
+}
+
+.btn{ 
+    display: inline-block;
+    padding: 0 12px!important;
+    margin: 0;
+    font-size: 12px;
+    line-height: 24px!important;
+    height: 25px!important;
+    text-align: center;
+    vertical-align: top;
+    cursor: pointer;
+    background-color: #ECECEC;
+    border: 0;
+    border-radius: 2px;
+    text-shadow: none;
+    color: #000;
+    box-shadow: none;
+}
+
+.pagination{
+    margin: 0;
+    padding: 13px 0;
+    text-align: center;
+    line-height: normal;
+    clear: both;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.pagination-action:hover{
+    color:rgb(77,153,244);
+}
+
+ .pagination-number{
+    background-color:#d7e8ff29;
+    padding:0.5em 0.8em;
+    color:#4a4a4a;
+    border-radius:2px;
+ }
+
+ .pagination-number:hover, .pagination-current{
+    background-color:#d7e8ff29;
+ }
+
+/*------------write 화면 --------------------------*/
+
+.question{
+    width: 900px;
+    height: 100%;
+    border: 1px solid #D8D8D8;
+    border-radius: 12px;
+    color: #4a4a4a;
+    font-size: 18px;
+}
+.information{
+    margin-right: 35px;
+    float: right;
+}
+
+.information> input[type=button]{
+ width: 50px;
+}
+
+input[type=button]{
+   display: inline-block;
+    padding: 0 12px!important;
+    margin: 0;
+    font-size: 12px;
+    line-height: 24px!important;
+    height: 25px!important;
+    text-align: center;
+    vertical-align: top;
+    cursor: pointer;
+    background-color: #ECECEC;
+    border: 0;
+    border-radius: 2px;
+    text-shadow: none;
+    color: #000;
+    box-shadow: none;}

@@ -1,0 +1,18 @@
+            <nav class="gnb" id="gnb">
+                <ul>
+                    <li class="go_write"><a href='/board_write'>작성하기</a></li>
+                    <li class="go_answers"><a href='reinforce_view'>강화하기</a></li>
+                    <li class="go_answers"><a href="/log_out">로그아웃</a></li>
+                    <strong>{{ request.session.user }}</strong>
+                </ul>
+            </nav>
+            <header class="header">
+                <h1><a href="/index"><img src="static/img/baseball-player.png" style="height: 90px;">PLAY-BALL</a></h1>
+                <div class="side">
+                    <!--<a href="">로그인</a>-->
+                    <form id=search action="" method="get" class="search">
+                       <input type="text" name="keyword" value required pattern="검색" title="검색">
+                       <input type="submit" value="검색">
+                    </form>
+                </div>
+            </header>
