@@ -14,7 +14,7 @@
                 <ul>
                     <li class="go_write"><a href='/board_write'>작성하기</a></li>
                     {% if request.session.user == "admin"%}
-                    <li class="go_answers"><a href='reinforce_view'>강화하기</a></li>
+                    <li class="go_answers"><a href='reinforce_view'>댓글보기</a></li>
                     <li class="go_answers"><a href="/log_out">로그아웃</a></li>
                     {% else%}
                     <li class="log_in"><a href="#acField" onclick="openField()">로그인</a><form id="log_in_widget" action="/log_in" method="post">
@@ -29,7 +29,6 @@
                         <button type="button" class="close" onClick="closeField()">×</button></fieldset>
                     </form></li>
                     {% endif %}
-                    <strong>{{ request.session.user }}</strong>
                     <script>
                         function openField() {
                         document.getElementById("acField").style.display = "block";

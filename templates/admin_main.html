@@ -32,10 +32,10 @@
                                         <th style="width:30%"><a href="{% url 'board_detail' i.no%}"/>{{i.question}}</th>
                                         <th style="width:10%">{{i.writer}}</th>
                                         <th style="width:10%">{{i.date}}</th>
-                                        {% if i.answer > 0 %}
-                                        <th style="width:10%">○</th>
+                                         {% if i.answer == "답변완료" %}
+                                        <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
                                         {% else %}
-                                        <th style="width:10%">X</th>
+                                        <th style="width:10% ">답변 대기중</th>
                                         {% endif %}
                                         <th style="width:5%"><input type="checkbox" name="cb" id="cb" value={{i.no}} ></th>
                                     </tr>
