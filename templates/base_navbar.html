@@ -2,7 +2,7 @@
                 <ul>
                     <li class="go_write"><a href='/board_write'>작성하기</a></li>
                     {% if request.session.user == "admin"%}
-                    <li class="go_answers"><a href='reinforce_view'>댓글보기</a></li>
+                    <li class="go_answers"><a href='/reinforce_view'>댓글보기</a></li>
                     <li class="go_answers"><a href="/log_out">로그아웃</a></li>
                     {% else%}
                     <li class="log_in"><a href="#acField" onclick="openField()">로그인</a><form id="log_in_widget" action="/log_in" method="post">
@@ -17,6 +17,7 @@
                         <button type="button" class="close" onClick="closeField()">×</button></fieldset>
                     </form></li>
                     {% endif %}
+                    <li style="float: right;"> <p style="font-size: 13px;color:#444;">2019년 이후의 기사들만 검색 가능합니다.</p></li>
 
                     <script>
                         function openField() {
@@ -30,11 +31,4 @@
             </nav>
             <header class="header">
                 <h1><a href="/index"><img src="static/img/baseball-player.png" style="height: 90px;">PLAY-BALL</a></h1>
-                <div class="side">
-                    <!--<a href="">로그인</a>-->
-                    <form id=search action="" method="get" class="search">
-                       <input type="text" name="keyword" value required pattern="검색" title="검색">
-                       <input type="submit" value="검색">
-                    </form>
-                </div>
             </header>
