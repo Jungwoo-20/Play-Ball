@@ -1,80 +1,113 @@
 
-   {%extends "base_head.html"%}
-    {% load static %}
+{%extends "base_head.html"%}
+{% load static %}
 
-    {%block body%}
-        <div class="container">
-            {%include "base_navbar.html"%}
-            <div class="body_main">
-                <div class="content" id="content">
-                    <div class="board">
-                        <form class="board_list" action="/delete_admin" id="board_list" method="GET">
-                            <table width="100%" cellspacing="0">
-                                <thead style="background: #f6f6f6">
-                                    <tr>
-                                        <div class="bl_no"> <th>No</th></div>
-                                        <div class="bl_question"><th>질문</th></div>
-                                        <div class="bl_writer"><th>작성자</th></div>
-                                        <div class="bl_date"><th>작성날짜</th></div>
-                                        <div class="bl_answer"><th>답글</th></div>
-                                        <div class="check_box"><th>선택</th></div>
-                                    </tr>
-                                </thead>
-                                <tbody>
+{%block body%}
+<div class="container">
+    {%include "base_navbar.html"%}
+    <div class="body_main">
+        <div class="content" id="content">
+            <div class="board">
+               <form id=search action="/admin_main" method="get" class="search">
+                    <input type="text" id="keyword" name="keyword" placeholder="Keyword" value="{{keyword|default_if_none:''}}">
+                    <input type="hidden" id="page" name="page" value="{{page}}">
+                     <button id="btn_search" onclick="document.getElementById('search').submit()">검색</button>
+                </form>
+                    <form class="board_list" action="/delete_admin" id="board_list" method="GET">
+                        <table width="100%" cellspacing="0">
+                            <thead style="background: #f6f6f6">
+                            <tr>
+                                <div class="bl_no"> <th>No</th></div>
+                                <div class="bl_question"><th>질문</th></div>
+                                <div class="bl_writer"><th>작성자</th></div>
+                                <div class="bl_date"><th>작성날짜</th></div>
+                                <div class="bl_answer"><th>답글</th></div>
+                                <div class="check_box"><th>선택</th></div>
+                            </tr>
+                            </thead>
+                            <tbody id="updateData">
 
-                                     {% if not rs_board %}
-                                    <p>내용이 없습니다.</p>
-                                    {%endif%}
+                            {% if not rs_board %}
+                            <p>내용이 없습니다.</p>
+                            {%endif%}
 
-                                    {% for i in rs_board %}
-                                    <tr height="40px">
-                                        <th style="width:10%">{{i.no}}</th>
-                                        <th style="width:30%"><a href="{% url 'board_detail' i.no%}"/>{{i.question}}</th>
-                                        <th style="width:10%">{{i.writer}}</th>
-                                        <th style="width:10%">{{i.date}}</th>
-                                         {% if i.answer == "답변완료" %}
-                                        <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
-                                        {% else %}
-                                        <th style="width:10% ">답변 대기중</th>
-                                        {% endif %}
-                                        <th style="width:5%"><input type="checkbox" name="cb" id="cb" value={{i.no}} ></th>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </form>
-                        <div class="list_footer">
-                            <div class="btnArea">
-                                <input class ="btn" type="button" value="삭제" onclick=" document.getElementById('board_list').submit()">
-
-                            </div>
-                             <div class="pagination">
-                                {% if rs_board.has_previous %}
-                                 <a  class="pagination-action" href="?page=1"><<</a>
-                                 <a class="pagination-action" href="?page={{ rs_board.previous_page_number}}"><</a>
+                            {% for i in rs_board %}
+                            <tr height="40px">
+                                <th style="width:5%">{{i.no}}</th>
+                                <th style="width:35%" onclick="location.href='{% url 'board_detail' i.no%}'" style="cursor:pointer;">{{i.question}}</th>
+                                <th style="width:10%">{{i.writer}}</th>
+                                <th style="width:10%">{{i.date}}</th>
+                                {% if i.answer == "답변완료" %}
+                                <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
+                                {% else %}
+                                <th style="width:10% ">답변 대기중</th>
                                 {% endif %}
+                                <th style="width:5%"><input type="checkbox" name="cb" id="cb" value={{i.no}} ></th>
+                            </tr>
 
-                                {% for num in rs_board.paginator.page_range %}
-                                    {% if rs_board.number == num %}
-                                    <span class="pagination-number pagination-current">{{ num }}</span>
-                                    {% elif num > rs_board.number|add:'-3' and num < rs_board.number|add:'3' %}
-                                        <a class="pagination-number" href="?page={{ num }}">{{num}}</a>
-                                    {% endif %}
-                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                    <div class="list_footer">
+                        <div class="btnArea">
+                            <input class ="btn" type="button" value="삭제" onclick=" document.getElementById('board_list').submit()">
 
-                                {% if rs_board.has_next %}
-                                 <a class="pagination-action" href="?page={{ rs_board.next_page_number }}">></a>
-                                 <a class="pagination-action" href="?page={{ rs_board.paginator.num_pages}}">>></a>
-                                {% endif %}
-
-                            </div>
                         </div>
+                        <div class="pagination">
+                        {% if rs_board.has_previous %}
+                        <a  class="pagination-action" href="?keyword={{keyword}}&page=1"><<</a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ answers.previous_page_number}}"><</a>
+                        {% endif %}
+
+                        {% for num in rs_board.paginator.page_range %}
+                        {% if rs_board.number == num %}
+                        <span class="pagination-number pagination-current">{{ num }}</span>
+                        {% elif num > rs_board.number|add:'-3' and num < rs_board.number|add:'3' %}
+                        <a class="pagination-number" href="?keyword={{keyword}}&page={{ num }}">{{num}}</a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if rs_board.has_next %}
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ rs_board.next_page_number }}">></a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ rs_board.paginator.num_pages}}">>></a>
+                        {% endif %}
+
                     </div>
-                </div>
+                    </div>
             </div>
-
         </div>
+    </div>
 
-    {%endblock%}
-    </body>
-    </html>
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+var checkList = [];
+ $("input[name=cb]:checked").each(function(i){
+    checkList.push($(this).val());
+ });
+var page=$('#page').val();
+var kw=$('#keyword').val();
+function updateData(){
+    $.ajax({
+            url:"{% url 'updateData' %}",
+            type:"GET",
+            data:$('#board_list').serialize(),'csrfmiddlewaretoken': '{{ csrf_token }}',
+
+            success: function(data){
+                 $('#updateData').html(data);
+                 console.log("고");
+            },
+        });
+            setTimeout('updateData()',3000);
+    }
+ window.onload = function() {
+
+                if(page==1&&kw==""){
+               setTimeout('updateData()',3000);
+               }
+        }
+</script>
+{%endblock%}
+</body>
+</html>
