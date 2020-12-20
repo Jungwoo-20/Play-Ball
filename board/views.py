@@ -252,7 +252,6 @@ def function_answer(request):
 
         f.close()
 
-        # txt -> json / 파일 경로 수정 필요
         f1score=ReinforcementLearning.reinforce.create_json(
             "C:/Users/DeepLearning_5/PycharmProjects/Play-Ball/ReinforcementLearning/ReinforcementFile/SelectedAnswerSet.txt",answers_no_list)
         context={"f1score":f1score}
