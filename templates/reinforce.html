@@ -1,84 +1,311 @@
-    {%extends "base_head.html"%}
-    {% load static %}
+{%extends "base_head.html"%}
+{% load static %}
 
-    {%block body%}
-        <div class="container">
-            {% include "base_navbar.html"%}
-            <div class="body_main">
-                <div class="content" id="content">
-                    <div class="board">
-                        <form class="board_list" action="/function_answer" id="board_list">
-                            <table width="100%" cellspacing="0">
-                                <thead style="background: #f6f6f6">
-                                    <tr>
-                                        <div class="bl_no"> <th>Board.No</th></div>
-                                        <div class="bl_question"><th>질문</th></div>
-                                        <div class="bl_writer"><th>Answer.No</th></div>
-                                        <div class="bl_date"><th>답글</th></div>
-                                        <div calss="good"><th>추천</th></div>
-                                        <div calss="bad"><th>비추천</th></div>
-                                        <div class="bl_answer"><th>답글날짜</th></div>
-                                        <div class="check_box"><th>선택</th></div>
-                                    </tr>
+{%block body%}
+<div class="container">
+    {% include "base_navbar.html"%}
+    <div class="body_main">
+        <div class="content" id="content">
+            <div class="board">
+                <form id=search action="/reinforce_view" method="get" class="search">
+                    <input type="text" id="keyword" name="keyword" placeholder="Keyword" value="{{keyword|default_if_none:''}}">
+                    <input type="hidden" id="page" name="page" value="{{page}}">
+                     <button id="btn_search" onclick="document.getElementById('search').submit()">검색</button>
+                </form>
+                <form class="board_list" action="/function_answer" id="board_list">
+                    <table width="100%" cellspacing="0">
+                        <thead style="background: #f6f6f6">
+                        <tr>
+                            <div class="bl_no"> <th>Board.No</th></div>
+                            <div class="bl_question"><th>질문</th></div>
+                            <div class="bl_date"><th>답글</th></div>
+                            <div calss="good"><th>추천</th></div>
+                            <div calss="bad"><th>비추천</th></div>
+                            <div class="bl_answer"><th>답글날짜</th></div>
+                            <div class="check_box"><th>선택</th></div>
+                        </tr>
 
-                                </thead>
-                                <tbody>
-                                     {% if not answers %}
-                                    <p>내용이 없습니다.</p>
-                                    {%endif%}
-                                    {% for i in answers %}
+                        </thead>
+                        <tbody>
+                        {% if not answers %}
+                        <p>내용이 없습니다.</p>
+                        {%endif%}
+                        {% for i in answers %}
 
-                                        <tr height="20px">
-                                        <th style="width:5%">{{i.board_no}}</th>
-                                            {%for j in boards%}
-                                            {%if i.board_no == j.no%}
-                                        <th style="width:32%"><a href="{% url 'board_detail' i.board_no%}"/>{{j.question}}</th>
-                                            {%endif%}
-                                            {%endfor%}
-                                        <th style="width:5%">{{i.answer_no}}</th>
-                                        <th style="width:33%">{{i.answer}}</th>
-                                        <th style="width:5%">{{i.good}}</th>
-                                        <th style="width:5%">{{i.bad}}</th>
-                                        <th style="width:10%">{{i.date}}</th>
-                                        <th style="width:5%"><input type="checkbox" name="cb" id="cb" value="{{i.board_no}}+{{i.answer_no}}"></th>
-                                        </tr>
+                        <tr height="20px">
+                            <th style="width:5%">{{i.board_no}}</th>
+                            {%for j in boards%}
+                            {%if i.board_no == j.no%}
+                            <th style="width:32%"><a href="{% url 'board_detail' i.board_no%}"/>{{j.question}}</th>
+                            {%endif%}
+                            {%endfor%}
+                            <th style="width:33%">{{i.answer}}</th>
+                            <th style="width:5%">{{i.good}}</th>
+                            <th style="width:5%">{{i.bad}}</th>
+                            <th style="width:10%">{{i.date}}</th>
+                            <th style="width:5%"><input type="checkbox" name="cb" id="cb" value="{{i.board_no}}+{{i.answer_no}}"></th>
+                        </tr>
 
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        {% endfor %}
+                        </tbody>
+                    </table>
 
-                        <div class="list_footer">
-                            <div class="btnArea">
-                                <button class ="btn" name="function" value="reinforce" onclick="document.getElementById('board_list').submit()">강화하기</button>
-                                <button class ="btn" name="function" value="delete" onclick="document.getElementById('board_list').submit()">삭제</button>
+                    <div class="list_footer">
+                        <div class="btnArea">
+                            <a href="#Trysetting" class="btn" id="btnSet" onClick="modalCheck()">설정하기</a>
+                            <button class ="btn" name="function" value="delete" onclick="document.getElementById('board_list').submit()">삭제</button>
+                        </div>
+                      <div class="pagination">
+                        {% if answers.has_previous %}
+                        <a  class="pagination-action" href="?keyword={{keyword}}&page=1"><<</a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ answers.previous_page_number}}"><</a>
+                        {% endif %}
+
+                        {% for num in answers.paginator.page_range %}
+                        {% if answers.number == num %}
+                        <span class="pagination-number pagination-current">{{ num }}</span>
+                        {% elif num > answers.number|add:'-3' and num < answers.number|add:'3' %}
+                        <a class="pagination-number" href="?keyword={{keyword}}&page={{ num }}">{{num}}</a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if answers.has_next %}
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ answers.next_page_number }}">></a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ answers.paginator.num_pages}}">>></a>
+                        {% endif %}
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class ="modal-wrapper open" id="TryPatment">
+            <div class="modal" id="trymodal">
+
+                <div class="modal_head">
+                    <a class="btn-close trigger" href="" onClick="closeModal()">
+                        X
+                    </a>
+                    <form id="detailsettingfrm" action="" method="get">
+                        <div class="modal_content" id="modal_detail_content"style="display:block;">
+                        <div class="modal_title">상세설정</div>
+
+                        <table cellpadding="0" cellspacing="0" border="0">
+
+                            <tbody>
+                            <tr>
+                                <td class="bg01">평가 개수</td>
+                                <td style="padding:15px 0 15px 20px;">
+
+                                    <input type="number" name="Acount" id="Acount" value="0" min="0"><label>이상</label>
+                                </select>&nbsp;&nbsp;&nbsp;
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="bg01">추천 비율</td>
+                                <td style="padding:15px 0 15px 20px;">
+                                    <input type="range" id="goodratio" name="goodratio" list="tickmarks">
+                                    <p style="color: #4a4a4a;font-size: 15px;font-weight: bold;"><span id="demo" style="margin: 0 0 12px 15px;"></span>%</p>
+                                    <datalist id="tickmarks">
+                                        <option value="0" label="0%"></option>
+                                        <option value="10"></option>
+                                        <option value="20"></option>
+                                        <option value="30"></option>
+                                        <option value="40"></option>
+                                        <option value="50" label="50%"></option>
+                                        <option value="60"></option>
+                                        <option value="70"></option>
+                                        <option value="80"></option>
+                                        <option value="90"></option>
+                                        <option value="100" label="100%"></option>
+                                    </datalist>
+
+
+                                </td>
+                            </tr>
+                            <script>
+                             var slider = document.getElementById("goodratio");
+                             var output = document.getElementById("demo");
+                             output.innerHTML = slider.value;
+                             slider.oninput = function() {
+                                output.innerHTML = this.value;
+                             }
+                             </script>
+                            <tr>
+                                <td class="bg01">선택 개수</td>
+                                <td style="padding:15px 0 15px 20px;">
+
+                                    <input type="radio" name="Qcount" id="Qcount10" value="10" checked="checked"><label for="Qcount10">10</label>&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="Qcount" id="Qcount20" value="20"><label for="Qcount20">20</label>&nbsp;&nbsp;
+                                    <input type="radio" name="Qcount" id="Qcount30" value="30" checked=""> <label for="Qcount30">30</label>&nbsp;&nbsp;&nbsp;
+
+                            </tr>
+
+
+                            </tbody></table>
+                        <div class="button-4" id="button-4">
+                            <div class="eff-4"></div>
+                            <a class="btn4">조회하기</a>
+                        </div>
+                    </div></form>
+                    <div id = "Progress_Loading"><!-- 로딩바 -->
+                        <img src="static/img/loadingBar.gif"/>
+                    </div>
+                    <form id="Lookupfrm" action="/function_answer">
+                        <div class="modal_content" id="modal_Lookup_content" style="display: none;">
+                            <div class="modal_title" id="modal_title">조회</div>
+                            <div id="ajax_data"></div>
+                                <!--<table cellpadding="0" cellspacing="0" border="1" id="ajax_data">
+
+                                </table>-->
+
+                            <div class="button-4" onclick="javascript:reinforce()">
+                                <div class="eff-4"></div>
+                                <a class="btn4" id="reinforcebtn">강화하기</a>
+
                             </div>
-                             <div class="pagination">
-                                {% if answers.has_previous %}
-                                 <a  class="pagination-action" href="?page=1"><<</a>
-                                 <a class="pagination-action" href="?page={{ answers.previous_page_number}}"><</a>
-
-                                {% endif %}
-
-                                {% for num in answers.paginator.page_range %}
-                                    {% if answers.number == num %}
-                                    <span class="pagination-number pagination-current">{{ num }}</span>
-                                    {% elif num > answers.number|add:'-3' and num < answers.number|add:'3' %}
-                                        <a class="pagination-number" href="?page={{ num }}">{{num}}</a>
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% if answers.has_next %}
-                                 <a class="pagination-action" href="?page={{ answers.next_page_number }}">></a>
-                                 <a class="pagination-action" href="?page={{ answers.paginator.num_pages}}">>></a>
-                                {% endif %}
-
+                           <div class="button-4" onclick="modalCheck();" style="top:-60px;left:200px">
+                                <a class="btn4" href="#Trysetting">다시 설정하기</a>
                             </div>
                         </div>
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-     {%endblock%}
-    </body>
-    </html>
+
+        <!--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+
+        <script>
+
+        Element.prototype.setStyle = function(styles) {
+            for (var k in styles) this.style[k] = styles[k];
+                return this;
+          };
+
+         var modalwrap = document.getElementById("TryPatment")
+         var modal = document.getElementById("trymodal")
+         var lookup = document.getElementById("modal_Lookup_content")
+         var detail = document.getElementById("modal_detail_content")
+         var reinforcebtn = document.getElementById("reinforcebtn")
+
+         function modalCheck() {
+            modalwrap.setStyle({
+                opacity: '1',visibility: 'visible'
+            })
+            modal.setStyle({
+                opacity: '1'
+            })
+             modal.style.width="600px";
+            detail.setStyle({
+                display: 'block'
+            })
+            lookup.setStyle({
+                display: 'none'
+            })
+         }
+
+         function closeModal() {
+            modalwrap.setStyle({
+                opacity: '0',visibility: 'hidden'
+            })
+            modal.setStyle({
+                opacity: '0'
+            })
+            detail.setStyle({
+                display: 'block'
+            })
+            lookup.setStyle({
+                display: 'none'
+            })
+            modal.style.width="600px";
+         }
+
+
+
+
+
+
+         </script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+        <script>
+             $(document).ready(function(){
+
+               $('#Progress_Loading').hide(); //첫 시작시 로딩바를 숨겨준다.
+            })
+
+            $('#button-4').click(function(){
+
+                $('#modal_detail_content').css("display","none");
+                $('#trymodal')
+                    .css("top","10%")
+                    .css("width","960px");
+                $('#modal_Lookup_content')
+                    .css("display","block")
+                    .css("height","490px")
+                    .css("overflow-y", "scroll");
+
+                var Acount =$('#Acount').val();
+                var Qcount = $('input:radio[name=Qcount]:checked').val();
+                var goodratio = $('#goodratio').val();
+
+
+                 $.ajax({
+                    url:"{% url 'Lookup' %}",
+                    type:"GET",
+                    data: { Acount:Acount, goodratio : goodratio, Qcount:Qcount },
+                    success: function(data){
+                         $('#ajax_data').html(data);
+
+                    },
+                    error:function(request,status,error){
+                        alert("통신실패")
+                    }
+                });
+            });
+            var form=document.getElementById('Lookupfrm')
+
+            function reinforce(){
+                if(checknum<10){
+                 console.log(checknum);
+                 alert("최소 10개 이상의 데이터가 필요합니다.")
+                }
+                else{
+                    var hiddenField = document.createElement("input");
+                    hiddenField.setAttribute("type", "hidden");
+                    hiddenField.setAttribute("name", "function");
+                    hiddenField.setAttribute("value", "reinforce");
+                    form.appendChild(hiddenField);
+                    var formData = $("#Lookupfrm").serialize();
+                    console.log(formData);
+                    $.ajax({
+                        url:"{% url 'function_answer' %}",
+                        type:"GET",
+                        data:formData,
+                        beforeSend:function(){
+                            $('#Progress_Loading').show();
+                        },
+                        success: function(data){
+                            $('#Progress_Loading').fadeOut();
+                            if(data.f1score=="n"){
+                              alert("학습에는 성공하였으나 기존 모델과 비교하였을 때, 성능 측정 점수가 좋지 않음으로 모델을 저장하지 않았습니다.");
+                                }
+
+                            else{
+                                alert("모델이 강화되었습니다.\n f1score : "+data.f1score);
+                            }
+                            closeModal();
+                        },
+                    });
+                }
+            }
+
+        </script>
+    </div>
+</div>
+{%endblock%}
+</body>
+</html>
