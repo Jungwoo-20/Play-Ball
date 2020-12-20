@@ -1,75 +1,112 @@
-    {%extends "base_head.html"%}
-    {% load static %}
+{%extends "base_head.html"%}
+{% load static %}
 
-    {%block body%}
-        <div class="container">
+{%block body%}
+<div class="container">
 
-            {%include "base_navbar.html"%}
+    {%include "base_navbar.html"%}
 
-            <div class="body_main">
-                <div class="content" id="content">
-                    <div class="board">
-                        <div class="board_list" id="board_list">
-                            <table width="100%" cellspacing="0">
-                                <thead style="background: #f6f6f6">
-                                    <tr>
-                                        <div class="bl_no"> <th>No</th></div>
-                                        <div class="bl_question"><th>질문</th></div>
-                                        <div class="bl_writer"><th>작성자</th></div>
-                                        <div class="bl_date"><th>작성날짜</th></div>
-                                        <div class="bl_answer"><th>답글</th></div>
-                                    </tr>
-                                </thead>
-                                <tbody>
+    <div class="body_main">
+        <div class="content" id="content">
+            <div class="board">
 
-                                     {% if not rs_board %}
+                <form id=search action="/" method="get" class="search">
+                    <input type="text" id="keyword" name="keyword" placeholder="Keyword" value="{{keyword|default_if_none:''}}">
+                    <input type="hidden" id="page" name="page" value="{{page}}">
+                     <button id="btn_search" onclick="document.getElementById('search').submit()">검색</button>
+                </form>
 
-                                    {%endif%}
+                <div class="board_list" id="board_list">
+                    <table width="100%" cellspacing="0">
+                        <thead style="background: #f6f6f6">
+                        <tr>
+                            <div class="bl_no"> <th>No</th></div>
+                            <div class="bl_question"><th>질문</th></div>
+                            <div class="bl_writer"><th>작성자</th></div>
+                            <div class="bl_date"><th>작성날짜</th></div>
+                            <div class="bl_answer"><th>답글</th></div>
+                        </tr>
+                        </thead>
+                        <tbody id="updateData">
 
-                                    {% for i in rs_board %}
-                                    <tr height="40px">
-                                        <th style="width:5%;">{{i.no}}</th>
-                                        <th style="width:35%"><a href="{% url 'board_detail' i.no%}"/>{{i.question}}</th>
-                                        <th style="width:10%">{{i.writer}}</th>
-                                        <th style="width:10%">{{i.date}}</th>
-                                       {% if i.answer == "답변완료" %}
-                                        <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
-                                        {% else %}
-                                        <th style="width:10% ">답변 대기중</th>
-                                        {% endif %}
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="list_footer">
-                            <div class="pagination">
-                                {% if rs_board.has_previous %}
-                                <a  class="pagination-action" href="?page=1"><<</a>
-                                <a class="pagination-action" href="?page={{ rs_board.previous_page_number}}"><</a>
-                                {% endif %}
+                        {% if not rs_board %}
 
-                                {% for num in rs_board.paginator.page_range %}
-                                    {% if rs_board.number == num %}
-                                    <span class="pagination-number pagination-current">{{ num }}</span>
-                                    {% elif num > rs_board.number|add:'-3' and num < rs_board.number|add:'3' %}
-                                        <a class="pagination-number" href="?page={{ num }}">{{num}}</a>
-                                    {% endif %}
-                                {% endfor %}
+                        {%endif%}
 
-                                {% if rs_board.has_next %}
-                                <a class="pagination-action" href="?page={{ rs_board.next_page_number }}">></a>
-                                <a class="pagination-action" href="?page={{ rs_board.paginator.num_pages}}">>></a>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                    </div>
+                        {% for i in rs_board %}
+                        <tr height="40px">
+                            <th style="width:5%;">{{i.no}}</th>
+                            <th style="width:35%" onclick="location.href='{% url 'board_detail' i.no%}'" style="cursor:pointer;">{{i.question}}</th>
+                            <th style="width:10%">{{i.writer}}</th>
+                            <th style="width:10%">{{i.date}}</th>
+                            {% if i.answer == "답변완료" %}
+                            <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
+                            {% else %}
+                            <th style="width:10% ">답변 대기중</th>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+                <div class="list_footer">
+
+                     <div class="pagination">
+                        {% if rs_board.has_previous %}
+                        <a  class="pagination-action" href="?keyword={{keyword}}&page=1"><<</a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ answers.previous_page_number}}"><</a>
+                        {% endif %}
+
+                        {% for num in rs_board.paginator.page_range %}
+                        {% if rs_board.number == num %}
+                        <span class="pagination-number pagination-current">{{ num }}</span>
+                        {% elif num > rs_board.number|add:'-3' and num < rs_board.number|add:'3' %}
+                        <a class="pagination-number" href="?keyword={{keyword}}&page={{ num }}">{{num}}</a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if rs_board.has_next %}
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ rs_board.next_page_number }}">></a>
+                        <a class="pagination-action" href="?keyword={{keyword}}&page={{ rs_board.paginator.num_pages}}">>></a>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
             </div>
-
         </div>
-    {%endblock%}
+    </div>
 
-    </body>
-    </html>
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+var page=$('#page').val();
+var kw=$('#keyword').val();
+function updateData(){
+    $.ajax({
+            url:"{% url 'updateData' %}",
+            type:"POST",
+            datatype:"html",
+            data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+
+            success: function(data){
+                 $('#updateData').html(data);
+                 console.log("고");
+            },
+        });
+            setTimeout('updateData()',3000);
+    }
+ window.onload = function() {
+
+                if(page==1&&kw==""){
+               setTimeout('updateData()',3000);
+               }
+        }
+</script>
+{%endblock%}
+
+</body>
+
+</html>
