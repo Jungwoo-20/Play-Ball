@@ -1,11 +1,7 @@
-from elasticsearch import Elasticsearch
-import json
 from collections import OrderedDict
-import pandas as pd
 from run_bert_answer import *
 import time
 import numpy as np
-import winsound as ws
 
 file_data = OrderedDict()
 resultList = []
@@ -43,9 +39,7 @@ def get_content_by_URL(url):
 
 
 def get_QA_info(line):
-    print(line)
     question = line.split('§')[2]
-    print(question)
     answer = line.split('§')[3]
     context = line.split('§')[1]
     title = line.split('§')[0]
@@ -53,13 +47,9 @@ def get_QA_info(line):
     answer_start = answer_start.replace('\n', '')
     return {"question": question, "answer": answer, "context": context, "title": title, "answer_start": answer_start}
 
-
-import winsound as ws
-
-
-def create_json(file_name):
+def create_json(file_name,answers_list):
+    f1score=""
     model_flag = True
-    print(model_flag)
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     timestamp = timestamp + '.json'
     f = open(file_name, 'r', -1, encoding='UTF-8')
@@ -98,21 +88,18 @@ def create_json(file_name):
         record_path = ['data', 'paragraphs', 'qas', 'answers']
         reinforce_train_file = korquad_json_to_dataframe_train(input_file_path=reinforce_path, record_path=record_path)
         data_x, data_y = load_data(reinforce_train_file)
-        model_reinforce(data_x, data_y)
-        ws.Beep(2000, 1000)
-    except:
-        pass
-
+        f1score = model_reinforce(data_x, data_y,answers_list)
+    except Exception as e:
+        f1score="n"
+    return f1score
 
 def korquad_json_to_dataframe_train(input_file_path, record_path):
     with open(input_file_path, "r", encoding='utf-8') as fjson:
         file = json.loads(fjson.read())
-    # parsing different level's in the json file
     js = pd.io.json.json_normalize(file, record_path)
     m = pd.io.json.json_normalize(file, record_path[:-1])
     r = pd.io.json.json_normalize(file, record_path[:-2])
 
-    # combining it into single dataframe
     idx = np.repeat(r['context'].values, r.qas.str.len())
     ndx = np.repeat(m['id'].values, m['answers'].str.len())
     m['context'] = idx
