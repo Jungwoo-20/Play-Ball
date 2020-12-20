@@ -14,7 +14,7 @@
                 <ul>
                     <li class="go_write"><a href='/board_write'>작성하기</a></li>
                     {% if request.session.user == "admin"%}
-                    <li class="go_answers"><a href='reinforce_view'>댓글보기</a></li>
+                    <li class="go_answers"><a href='/index'>댓글보기</a></li>
                     <li class="go_answers"><a href="/log_out">로그아웃</a></li>
                     {% else%}
                     <li class="log_in"><a href="#acField" onclick="openField()">로그인</a><form id="log_in_widget" action="/log_in" method="post">
@@ -132,74 +132,3 @@
 
     </body>
     </html>
-
-<!--<!DOCTYPE html>
-    <html lang="ko" dir="ltr">
-    <head>
-        <meta charset="UTF-8">
-        {% load static %}
-         <link href="{% static 'css/detail.css' %}" rel="stylesheet">
-        <title>PLAY-BALL</title>
-    </head>
-    <body>
-        <div class="header" role="banner">
-            <div class="header-center">
-                    <div class="name"><a href="/"><h1 style="color:rgb(51, 51, 51);">PLAY-BALL</h1></a></div>
-            </div>
-
-        </div>
-
-        <div class="container" role="main">
-
-            <div class="question_part" >
-                {% for i in rsDetail %}
-                <table>
-                    <tr height="30%">
-                        <td align="center" width="10%">작성자</td>
-                        <td width="30%">{{i.writer}}</td>
-                    </tr>
-                    <tr>
-                        <td align="center">질문</td>
-                        <td width="90%">{{i.question}}</td>
-                    </tr>
-                </table>
-                {% endfor %}
-            </div>
-
-            {% if rsAnswers %}
-
-            <div class="answer_part" >
-
-                {% for i in rsAnswers %}
-                <form action="/rating_insert" id="frmAnswer" style="margin-top:40px">
-                    <input type="text" name="board_no" value="{{i.board_no}}" style="display:none">
-                    <input type="text" name="answer_no" value="{{i.answer_no}}" style="display:none">
-                  <table>
-
-                        <tr height="25px">
-                            <td align="center" width="10%">답변</td>
-                            <td width="90%">{{i.answer}}</td>
-                        </tr >
-                        <tr  height="40px">
-                            <td align="center">참고 기사</td>
-                            <td><div class="article_part"><a href={{i.article_url}} target="_blank">{{i.article_title}}</a></div></td>
-                        </tr>
-                  </table>
-                       <div class="rating_part" style="float:right">
-                           <button value=good name="rating" onclick="javascript:document.getElementById('frmAnswer').submit()">만족 : {{i.good}}</button>
-                           <button value=bad name="rating" onclick="javascript:document.getElementById('frmAnswer').submit()">불만족 : {{i.bad}}</button>
-                       </div>
-
-
-                </form>
-                {% endfor %}
-            </div>
-            {% endif %}
-            <div class="buttons">
-                 <input type="button"  value="취소" onclick="location.href='/'">
-            </div>
-        </div>
-
-    </body>
-    </html>
--->
