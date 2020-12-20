@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -15,6 +16,7 @@ class Board(models.Model):
         managed = False
         db_table = 'board'
 
+
 class Answers(models.Model):
     board_no = models.IntegerField()
     answer_no = models.IntegerField(primary_key=True)
@@ -24,11 +26,14 @@ class Answers(models.Model):
     good = models.IntegerField(blank=True, null=True)
     bad = models.IntegerField(blank=True, null=True)
     date = models.DateTimeField(blank=True, null=True)
+    reinforce = models.IntegerField(blank=True, null=True)
+    ratio = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'answers'
         unique_together = (('answer_no', 'board_no'),)
+
 
 class Admin(models.Model):
     admin_id = models.CharField(primary_key=True, max_length=45)
@@ -37,3 +42,24 @@ class Admin(models.Model):
     class Meta:
         managed = False
         db_table = 'admin'
+
+
+class ModelScore(models.Model):
+    f1_score = models.FloatField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'model_score'
+
+
+class Rank(models.Model):
+    no = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=45, blank=True, null=True)
+    rank_no = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    team = models.CharField(max_length=45, blank=True, null=True)
+    info = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'rank'
