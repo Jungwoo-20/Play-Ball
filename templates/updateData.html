@@ -1,0 +1,31 @@
+
+    {% if not rs_board %}
+
+    {%endif%}
+
+    {% for i in rs_board %}
+    <tr height="40px">
+        <th style="width:5%;">{{i.no}}</th>
+        <th style="width:35%" onclick="location.href='{% url 'board_detail' i.no%}'" style="cursor:pointer;">{{i.question}}</th>
+        <th style="width:10%">{{i.writer}}</th>
+        <th style="width:10%">{{i.date}}</th>
+        {% if i.answer == "답변완료" %}
+        <th style="width:10%; color:rgb(77, 153, 244);">{{i.answer}}</th>
+        {% else %}
+        <th style="width:10% ">답변 대기중</th>
+        {% endif %}
+
+        {%if user_info == "admin"%}
+            {%if not checkList%}<th style="width:5%"><input type="checkbox" name="cb"  value={{i.no}} ></th>
+            {%else%}
+                {% if i.no in checkList %}<th style="width:5%"><input type="checkbox" name="cb"  value={{i.no}} checked="checked" ></th>
+                {% else %}<th style="width:5%"><input type="checkbox" name="cb"  value={{i.no}} ></th>
+                {% endif %}
+            {% endif %}
+        {%endif%}
+    </tr>
+
+    {% endfor %}
+    <script>
+
+    </script>

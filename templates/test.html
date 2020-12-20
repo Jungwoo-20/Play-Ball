@@ -1,0 +1,42 @@
+
+<table cellpadding="0" cellspacing="0" border="1">
+    <thead style="background: #f6f6f6">
+        <tr>
+            <div class="bl_no"> <th>Board.No</th></div>
+            <div class="bl_question"><th>질문</th></div>
+            <div class="bl_date"><th>답글</th></div>
+            <div calss="good"><th>추천</th></div>
+            <div calss="bad"><th>비추천</th></div>
+            <div class="check_box"><th>선택</th></div>
+        </tr>
+
+    </thead>
+    <tbody id="ajax_data">
+        {% if not answers %}
+        <p>내용이 없습니다.</p>
+        {%endif%}
+
+        {% for i in answers %}
+        <tr height="20px">
+            <th style="width:5%">{{i.board_no}}</th>
+            {%for j in boards%}
+            {%if i.board_no == j.no%}
+            <th style="width:32%"><a href="{% url 'board_detail' i.board_no%}"/>{{j.question}}</th>
+            {%endif%}
+            {%endfor%}
+            <th style="width:33%">{{i.answer}}</th>
+            <th style="width:5%">{{i.good}}</th>
+            <th style="width:5%">{{i.bad}}</th>
+            <th style="width:5%"><input type="checkbox" name="cb" id="cb" value="{{i.board_no}}+{{i.answer_no}}" checked="checked"></th>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+</table>
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+        <script>
+            var checknum = $("input:checkbox[name=cb]:checked").length;
+        </script>
